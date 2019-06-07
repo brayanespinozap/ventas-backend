@@ -19,6 +19,7 @@ let clienteRoute = require('./routes/cliente');
 let ventaRoute = require('./routes/venta');
 let proveedorRoute = require('./routes/proveedor');
 let familiaRoute = require('./routes/familia');
+let detalleVentaRoute = require('./routes/detalleVenta');
 
 
 //esto le permite al servidor entender el formato json
@@ -43,6 +44,7 @@ app.use(clienteRoute);
 app.use(ventaRoute);
 app.use(proveedorRoute);
 app.use(familiaRoute);
+app.use(detalleVentaRoute);
 
 
 const PORT = process.env.PORT || 3000; // se le va a asignar el puerto que esta predeterminado para express o el 3000
