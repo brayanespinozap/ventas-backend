@@ -81,6 +81,7 @@ router.post('/empleado', (req, res) => {
         res.status(201).send(doc); //status es para enviar el estado y el send para agregar algo más
     })
     .catch(err => {
+        //console.log(req.body);
         res.status(500).json(err);
     });
 });

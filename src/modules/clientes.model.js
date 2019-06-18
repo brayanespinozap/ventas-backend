@@ -7,7 +7,7 @@ let clienteSchema = new mongoose.Schema({
         required: true
     },
     idUsuario:{
-        type: Number,
+        type: String,
         unique: true,
         required: true
     },
