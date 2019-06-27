@@ -13,12 +13,12 @@ let ArticuloShema = new mongoose.Schema({
     },
     idProveedor:{
         idProv1:{
-            type: Number,
+            type: String,
             required: true,
             index: true
         },
         idProv2:{
-            type: Number,
+            type: String,
             required: true,
             index: true
         }
