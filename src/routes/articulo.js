@@ -2,6 +2,13 @@ let ArticuloModel = require('../modules/articulos.model');
 let express = require('express');
 let router = express.Router();
 
+router.get('/articulo/cant', (req, res) => {
+    return ArticuloModel.estimatedDocumentCount()
+       .then(
+           cant => res.json(cant)
+       )
+})
+
 router.get('/articulo', (req, res) => {
     ArticuloModel.find()
     .then(doc => {
@@ -13,6 +20,31 @@ router.get('/articulo/buscar/:id', (req, res) =>{
     ArticuloModel.find({_id : req.params.id})
      .then(doc => {
          res.json(doc);
+     })
+});
+
+router.get(/*nombre de la ruta*/'/articulo/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
+    valor = (req.params.valor !== undefined) ? req.params.valor : "";
+    orden = (req.params.modo !== undefined) ? req.params.modo : 1;
+    nPag = (req.params.nPag !== undefined) ? parseInt(req.params.nPag) : 1;
+    limite = (req.params.limite !== undefined) ? parseInt(req.params.limite) : 10;
+
+    //la cadena vacía es false de lo contrario true
+    if(valor){
+        switch(valor){
+            case "Nombre" :
+                ordenar = {
+                    "Nombre" : orden
+                };
+        }
+    }
+    
+    ArticuloModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
+     .then(doc =>{
+         res.json(doc);
+     })
+     .catch(err => {
+         console.log(err);
      })
 });
 
