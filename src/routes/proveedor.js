@@ -2,11 +2,51 @@ let ProveedorModel = require('../modules/proveedores.model');
 let express = require('express');
 let router = express.Router();
 
+router.get('/proveedor/cant', (req, res) => {
+    return ProveedorModel.estimatedDocumentCount()
+       .then(
+           cant => res.json(cant)
+       )
+});
+
 router.get('/proveedor', (req, res) => {
     ProveedorModel.find()
       .then(doc => {
           res.json(doc);
       })
+});
+
+router.get('/proveedor/buscar/:id', (req, res) =>{
+    ProveedorModel.find({_id : req.params.id})
+     .then(doc => {
+         res.json(doc);
+     })
+});
+
+router.get(/*nombre de la ruta*/'/proveedor/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
+    valor = (req.params.valor !== undefined) ? req.params.valor : "";
+    orden = (req.params.modo !== undefined) ? req.params.modo : 1;
+    nPag = (req.params.nPag !== undefined) ? parseInt(req.params.nPag) : 1;
+    limite = (req.params.limite !== undefined) ? parseInt(req.params.limite) : 10;
+
+    //la cadena vacía es false de lo contrario true
+    if(valor){
+        switch(valor){
+            case "Nombre" :
+                ordenar = {
+                    "Nombre" : orden
+                };
+                break;
+        }
+    }
+    
+    ProveedorModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
+     .then(doc =>{
+         res.json(doc);
+     })
+     .catch(err => {
+         console.log(err);
+     })
 });
 
 router.post('/proveedor', (req, res) => {
