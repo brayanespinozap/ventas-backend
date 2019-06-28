@@ -37,6 +37,18 @@ router.get(/*nombre de la ruta*/'/articulo/orden/:valor/:modo/:nPag/:limite', (r
                     "Nombre" : orden
                 };
                 break;
+            
+            case "Precio" :
+                ordenar = {
+                    "precio" : orden
+                };
+                break;
+
+            case "Stock" :
+                ordenar = {
+                    "stock" : orden
+                };
+                break;
         }
     }
     
