@@ -86,7 +86,7 @@ router.put('/familia/:id', (req, res) => {
     });
 });
 
-router.delete('/familia', (req, res) => {
+router.delete('/familia/:id', (req, res) => {
     if(!req.params.id){
         return res.status(400).send("Hace falta el id para realizar la búsqueda");
     }
