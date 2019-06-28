@@ -36,6 +36,7 @@ router.get(/*nombre de la ruta*/'/articulo/orden/:valor/:modo/:nPag/:limite', (r
                 ordenar = {
                     "Nombre" : orden
                 };
+                break;
         }
     }
     
