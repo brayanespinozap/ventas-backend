@@ -7,7 +7,7 @@ router.get('/empleado/cant', (req, res) => {
        .then(
            cant => res.json(cant)
        )
-})
+});
 
 router.get(/*nombre de la ruta*/'/empleado', (req, res)=>{
     EmpleadoModel.find()

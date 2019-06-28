@@ -2,6 +2,13 @@ let FamiliaModel = require('../modules/familias.model');
 let express = require('express');
 let router = express.Router();
 
+router.get('/familia/cant', (req, res) => {
+    return FamiliaModel.estimatedDocumentCount()
+       .then(
+           cant => res.json(cant)
+       )
+});
+
 router.get('/familia', (req, res) => {
     FamiliaModel.find()
     .then(doc => {
@@ -16,6 +23,31 @@ router.get('/familia/buscar/:id', (req, res) =>{
      })
 });
 
+router.get(/*nombre de la ruta*/'/familia/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
+    valor = (req.params.valor !== undefined) ? req.params.valor : "";
+    orden = (req.params.modo !== undefined) ? req.params.modo : 1;
+    nPag = (req.params.nPag !== undefined) ? parseInt(req.params.nPag) : 1;
+    limite = (req.params.limite !== undefined) ? parseInt(req.params.limite) : 10;
+
+    //la cadena vacía es false de lo contrario true
+    if(valor){
+        switch(valor){
+            case "Nombre" :
+                ordenar = {
+                    "Nombre" : orden
+                };
+                break;
+        }
+    }
+    
+    FamiliaModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
+     .then(doc =>{
+         res.json(doc);
+     })
+     .catch(err => {
+         console.log(err);
+     })
+});
 
 router.post('/familia', (req, res) => {
     if(!req.body){
