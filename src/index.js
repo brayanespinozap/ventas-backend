@@ -19,6 +19,7 @@ let clienteRoute = require('./routes/cliente');
 let ventaRoute = require('./routes/venta');
 let proveedorRoute = require('./routes/proveedor');
 let familiaRoute = require('./routes/familia');
+let articuloRoute = require('./routes/articulo');
 let detalleVentaRoute = require('./routes/detalleVenta');
 
 
@@ -45,6 +46,7 @@ app.use(ventaRoute);
 app.use(proveedorRoute);
 app.use(familiaRoute);
 app.use(detalleVentaRoute);
+app.use(articuloRoute);
 
 
 const PORT = process.env.PORT || 3000; // se le va a asignar el puerto que esta predeterminado para express o el 3000
