@@ -4,12 +4,57 @@ let router = express.Router();
 let bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+router.get('/usuario/cant', (req, res) => {
+    return UsuarioModel.estimatedDocumentCount()
+       .then(
+           cant => res.json(cant)
+       )
+});
+
 //en el "doc" se guardan los datos que tengo en la tabla de usuarios que traje con el metodo find
 router.get('/usuario', (req, res) => {
     UsuarioModel.find()
         .then(doc => {
             res.json(doc);
         });
+});
+
+router.get('/usuario/buscar/:id', (req, res) =>{
+    UsuarioModel.find({_id : req.params.id})
+     .then(doc => {
+         res.json(doc);
+     })
+});
+
+router.get(/*nombre de la ruta*/'/usuario/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
+    valor = (req.params.valor !== undefined) ? req.params.valor : "";
+    orden = (req.params.modo !== undefined) ? req.params.modo : 1;
+    nPag = (req.params.nPag !== undefined) ? parseInt(req.params.nPag) : 1;
+    limite = (req.params.limite !== undefined) ? parseInt(req.params.limite) : 10;
+
+    //la cadena vacía es false de lo contrario true
+    if(valor){
+        switch(valor){
+            case "Usuario" :
+                ordenar = {
+                    "Usuario" : orden
+                };
+                break;
+            case "Rol" :
+                ordenar = {
+                    "Rol" : orden
+                };
+                break;
+        }
+    }
+    
+    UsuarioModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
+     .then(doc =>{
+         res.json(doc);
+     })
+     .catch(err => {
+         console.log(err);
+     })
 });
 
 router.post('/usuario/logg', (req, res) => {
@@ -91,12 +136,12 @@ router.put('/usuario/:id', (req, res) => {
     });
 });
 
-router.delete('/usuario', (req, res) => {
-    if(!req.query.idUsuario){
+router.delete('/usuario/:id', (req, res) => {
+    if(!req.params.id){
         return res.status(400).send("Hace falta el id para hacer la busqueda");
     }
     UsuarioModel.findOneAndRemove({
-         idUsuario : req.query.idUsuario //aqui hago referencia al atributo:valor del documento
+         _id : req.params.id //aqui hago referencia al atributo:valor del documento
        })
     .then(doc => {
         res.json(doc);
