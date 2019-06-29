@@ -26,6 +26,13 @@ router.get('/usuario/buscar/:id', (req, res) =>{
      })
 });
 
+router.get('/usuario/:usuario', (req, res) =>{
+    UsuarioModel.find({usuario : req.params.usuario})
+     .then(doc => {
+         res.json(doc);
+     })
+});
+
 router.get(/*nombre de la ruta*/'/usuario/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
     valor = (req.params.valor !== undefined) ? req.params.valor : "";
     orden = (req.params.modo !== undefined) ? req.params.modo : 1;
