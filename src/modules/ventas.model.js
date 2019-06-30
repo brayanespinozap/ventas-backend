@@ -1,6 +1,11 @@
 let mongoose = require('../../config');
 
 let ventaSchema = new mongoose.Schema({
+    idVenta: {
+        type: String,
+        unique: true,
+        required: true
+    },
     idCliente: {
         type: Number,
         index: true,
