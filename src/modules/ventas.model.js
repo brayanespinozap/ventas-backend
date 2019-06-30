@@ -7,17 +7,17 @@ let ventaSchema = new mongoose.Schema({
         required: true
     },
     idCliente: {
-        type: Number,
+        type: String,
         index: true,
         required: true
     },
     idEmpleado: {
-        type: Number,
+        type: String,
         index: true,
         required: true
     },
     codigo: {
-        type: Number,
+        type: String,
         index: true,
         required: true
     },
@@ -26,7 +26,7 @@ let ventaSchema = new mongoose.Schema({
         required: true
     },
     fecha: {
-        type: Date,
+        type: String,
         index: true,
         required: true
     },
