@@ -11,6 +11,15 @@ let ventaSchema = new mongoose.Schema({
         index: true,
         required: true
     },
+    codigo: {
+        type: Number,
+        index: true,
+        required: true
+    },
+    cant: {
+        type: Number,
+        required: true
+    },
     fecha: {
         type: Date,
         index: true,
