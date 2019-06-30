@@ -34,7 +34,7 @@ router.get(/*nombre de la ruta*/'/venta/orden/:valor/:modo/:nPag/:limite', (req,
         switch(valor){
             case "Descuento" :
                 ordenar = {
-                    "Descuento" : orden
+                    "descuento" : orden
                 };
                 break;
         }
