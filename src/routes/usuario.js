@@ -143,6 +143,26 @@ router.put('/usuario/:id', (req, res) => {
     });
 });
 
+router.put('/usuario/NombreUsuario/:usuario', (req, res) => {
+    if(!req.params.usuario){
+        return res.status(400).send("Hace falta el id para hacer la busqueda");
+    }
+    UsuarioModel.findOneAndUpdate({
+         usuario : req.params.usuario //aqui hago referencia al atributo:valor del documento
+       },
+       req.body,
+       {
+           new: true //es para que me devuelva el nuevo dato que se introdujo y no el viejo
+       }
+    )
+    .then(doc => {
+        res.json(doc);
+    })
+    .catch(err => {
+        res.status(500).json(err);
+    });
+});
+
 router.delete('/usuario/:id', (req, res) => {
     if(!req.params.id){
         return res.status(400).send("Hace falta el id para hacer la busqueda");
