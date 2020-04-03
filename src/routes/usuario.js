@@ -12,11 +12,29 @@ router.get('/usuario/cant', (req, res) => {
 });
 
 //en el "doc" se guardan los datos que tengo en la tabla de usuarios que traje con el metodo find
-router.get('/usuario', (req, res) => {
-    UsuarioModel.find()
-        .then(doc => {
-            res.json(doc);
-        });
+function verifyToken(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    }else{
+        res.status(403).json('Prohibido');
+    }
+}
+
+router.get('/usuario', verifyToken , (req, res) => {
+    jwt.verify(req.token, 'cualquierClave', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            UsuarioModel.find()
+              .then(doc => {
+                 res.json(doc);
+              });
+        }
+    })
 });
 
 router.get('/usuario/buscar/:id', (req, res) =>{
@@ -28,9 +46,9 @@ router.get('/usuario/buscar/:id', (req, res) =>{
 
 router.get('/usuario/:usuario', (req, res) =>{
     UsuarioModel.find({usuario : req.params.usuario})
-     .then(doc => {
-         res.json(doc);
-     })
+        .then(doc => {
+            res.json(doc);
+        })       
 });
 
 router.get(/*nombre de la ruta*/'/usuario/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
@@ -54,14 +72,14 @@ router.get(/*nombre de la ruta*/'/usuario/orden/:valor/:modo/:nPag/:limite', (re
                 break;
         }
     }
-    
+
     UsuarioModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
-     .then(doc =>{
-         res.json(doc);
-     })
-     .catch(err => {
-         console.log(err);
-     })
+    .then(doc =>{
+        res.json(doc);
+    })
+    .catch(err => {
+        console.log(err);
+    })
 });
 
 router.post('/usuario/logg', (req, res) => {
@@ -85,7 +103,7 @@ router.post('/usuario/logg', (req, res) => {
                 const token = jwt.sign({
                     usuario: req.body.usuario,
                     rol: doc.rol
-                }, 'cualquierClave');
+                }, 'cualquierClave', {expiresIn: '60s'});
                 
                 return res.status(200).json({
                     usuario: req.body.usuario,

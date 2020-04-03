@@ -1,6 +1,7 @@
 let EmpleadoModel = require('../modules/empleado.model');
 let express = require('express');
 let router = express.Router();
+const jwt = require('jsonwebtoken');
 
 router.get('/empleado/cant', (req, res) => {
     return EmpleadoModel.estimatedDocumentCount()
@@ -23,7 +24,19 @@ router.get('/empleado/buscar/:id', (req, res) =>{
      })
 });
 
-router.get(/*nombre de la ruta*/'/empleado/orden/:valor/:modo/:nPag/:limite', (req, res)=>{
+function verifyToken(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    }else{
+        res.status(403).json('Prohibido');
+    }
+}
+
+router.get(/*nombre de la ruta*/'/empleado/orden/:valor/:modo/:nPag/:limite', verifyToken, (req, res)=>{
     valor = (req.params.valor !== undefined) ? req.params.valor : "";
     orden = (req.params.modo !== undefined) ? req.params.modo : 1;
     nPag = (req.params.nPag !== undefined) ? parseInt(req.params.nPag) : 1;
@@ -57,14 +70,21 @@ router.get(/*nombre de la ruta*/'/empleado/orden/:valor/:modo/:nPag/:limite', (r
                 break;
         }
     }
-    
-    EmpleadoModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
-     .then(doc =>{
-         res.json(doc);
-     })
-     .catch(err => {
-         console.log(err);
-     })
+
+    jwt.verify(req.token, 'cualquierClave', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            EmpleadoModel.find().skip((nPag - 1) * limite).limit(limite).sort(ordenar)
+            .then(doc =>{
+                res.json(doc);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    })   
+   
 });
 
 router.post('/empleado', (req, res) => {
